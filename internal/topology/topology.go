@@ -71,9 +71,9 @@ type RDMATopology struct {
 
 // SRIOVTopology holds SR-IOV-specific topology for a NIC.
 type SRIOVTopology struct {
-	TotalVFs       int              `json:"totalVfs"`
-	ResourceName   string           `json:"resourceName"`
-	ResourcePrefix string           `json:"resourcePrefix"`
+	TotalVFs       int               `json:"totalVfs"`
+	ResourceName   string            `json:"resourceName"`
+	ResourcePrefix string            `json:"resourcePrefix"`
 	VFs            []VirtualFunction `json:"vfs"`
 }
 
@@ -132,8 +132,8 @@ func WriteConfigMap(ctx context.Context, c client.Client, namespace string, topo
 			Name:      ConfigMapName(topo.NodeName),
 			Namespace: namespace,
 			Labels: map[string]string{
-				"app.kubernetes.io/managed-by": "fake-network-operator",
-				"app.kubernetes.io/component":  "topology",
+				"app.kubernetes.io/managed-by":  "fake-network-operator",
+				"app.kubernetes.io/component":   "topology",
 				"fake-network-operator.io/node": topo.NodeName,
 				"fake-network-operator.io/pool": topo.NodePool,
 			},

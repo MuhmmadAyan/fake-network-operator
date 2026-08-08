@@ -62,14 +62,14 @@ const (
 
 	// ----- Device ID mappings (PCI device ID → product name) -----
 
-	DeviceIDConnectX5  = "1017"
+	DeviceIDConnectX5   = "1017"
 	DeviceIDConnectX5Ex = "1019"
-	DeviceIDConnectX6  = "101b"
+	DeviceIDConnectX6   = "101b"
 	DeviceIDConnectX6Dx = "101d"
 	DeviceIDConnectX6Lx = "101f"
-	DeviceIDConnectX7  = "1021"
-	DeviceIDBF2        = "a2d6"
-	DeviceIDBF3        = "a2dc"
+	DeviceIDConnectX7   = "1021"
+	DeviceIDBF2         = "a2d6"
+	DeviceIDBF3         = "a2dc"
 )
 
 // DeviceIDToProduct maps PCI device IDs to human-readable product names.

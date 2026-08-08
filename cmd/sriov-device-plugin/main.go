@@ -60,7 +60,7 @@ func main() {
 			for _, vf := range nicTopo.SRIOV.VFs {
 				deviceIDs = append(deviceIDs, vf.ID)
 			}
-			
+
 			resPrefix := nicTopo.SRIOV.ResourcePrefix
 			if resPrefix == "" {
 				resPrefix = "nvidia.com"
@@ -73,14 +73,14 @@ func main() {
 			server := deviceplugin.NewServer(resName, deviceIDs, "PCIDEVICE_FAKE_NETWORK")
 			socketFileName := strings.ReplaceAll(resName, "/", "_") + ".sock"
 			socketPath := filepath.Join("/var/lib/kubelet/device-plugins", socketFileName)
-			
+
 			go func(socketPath string, resourceName string) {
 				setupLog.Info("serving device plugin", "resource", resourceName)
 				if err := deviceplugin.Serve(server, socketPath); err != nil {
 					setupLog.Error(err, "failed to serve device plugin", "resource", resourceName)
 				}
 			}(socketPath, resName)
-			
+
 			setupLog.Info("registering device plugin", "resource", resName)
 			if err := deviceplugin.Register(kubeletSocket, resName, socketPath); err != nil {
 				setupLog.Error(err, "failed to register device plugin", "resource", resName)

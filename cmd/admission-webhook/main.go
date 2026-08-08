@@ -50,7 +50,7 @@ func (v *FakeNicClusterPolicyValidator) Handle(ctx context.Context, req admissio
 				return admission.Denied("NIC names must be unique within a node pool")
 			}
 			nicNames[nic.Name] = true
-			
+
 			if nic.SRIOV != nil && nic.SRIOV.ResourceName == "" {
 				return admission.Denied("SRIOV resource name cannot be empty")
 			}
@@ -79,7 +79,7 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:             scheme,
+		Scheme: scheme,
 		Metrics: metricsserver.Options{
 			BindAddress: "0",
 		},
@@ -95,7 +95,7 @@ func main() {
 
 	hookServer := mgr.GetWebhookServer()
 	decoder := admission.NewDecoder(scheme)
-	
+
 	hookServer.Register("/validate-fake-network-operator-v1alpha1-fakenicclusterpolicy", &webhook.Admission{Handler: &FakeNicClusterPolicyValidator{decoder: decoder}})
 
 	setupLog.Info("starting webhook manager")

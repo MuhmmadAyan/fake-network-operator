@@ -47,7 +47,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		if err != nil {
 			return ctrl.Result{}, err
 		}
-		
+
 		if pod.Annotations["mellanox.infiniband.app/guid"] != guid {
 			if pod.Annotations == nil {
 				pod.Annotations = make(map[string]string)
@@ -86,7 +86,7 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:             scheme,
+		Scheme: scheme,
 		Metrics: metricsserver.Options{
 			BindAddress: "0",
 		},

@@ -39,12 +39,12 @@ func main() {
 	}
 
 	binPath := filepath.Join(hostPath, "fake-cli")
-	
+
 	sourcePath := "/usr/local/bin/fake-cli"
 	if err := copyFile(sourcePath, binPath); err != nil {
 		setupLog.Error(err, "failed to copy fake-cli")
 	}
-	
+
 	os.Chmod(binPath, 0755)
 
 	commands := []string{"ibstat", "ibv_devinfo", "ibv_devices", "rdma"}

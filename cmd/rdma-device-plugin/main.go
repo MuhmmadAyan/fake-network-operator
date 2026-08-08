@@ -65,18 +65,18 @@ func main() {
 			if !strings.Contains(resName, "/") {
 				resName = "rdma/" + resName
 			}
-			
+
 			server := deviceplugin.NewServer(resName, deviceIDs, "RDMA_DEVICE")
 			socketFileName := strings.ReplaceAll(resName, "/", "_") + ".sock"
 			socketPath := filepath.Join("/var/lib/kubelet/device-plugins", socketFileName)
-			
+
 			go func(socketPath string, resourceName string) {
 				setupLog.Info("serving device plugin", "resource", resourceName)
 				if err := deviceplugin.Serve(server, socketPath); err != nil {
 					setupLog.Error(err, "failed to serve device plugin", "resource", resourceName)
 				}
 			}(socketPath, resName)
-			
+
 			setupLog.Info("registering device plugin", "resource", resName)
 			if err := deviceplugin.Register(kubeletSocket, resName, socketPath); err != nil {
 				setupLog.Error(err, "failed to register device plugin", "resource", resName)

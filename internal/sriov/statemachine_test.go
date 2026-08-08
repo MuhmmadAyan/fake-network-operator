@@ -11,7 +11,7 @@ import (
 func TestStateMachine_Lifecycle(t *testing.T) {
 	// Create state machine with 0 failure rate to ensure successful transitions
 	sm := NewStateMachine("node-1", 10*time.Millisecond, 10*time.Millisecond, 0.0)
-	
+
 	assert.Equal(t, StateIdle, sm.GetState())
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -27,14 +27,14 @@ func TestStateMachine_Lifecycle(t *testing.T) {
 	// But according to the code:
 	// Run immediately sets state to StateDraining and sleeps 100ms.
 	time.Sleep(200 * time.Millisecond)
-	
+
 	// Because the ticker in Run() is hardcoded to 5 seconds, we can only verify the initial transition
 	// to Draining easily, or we must wait 5s for the next transition, 10s for the next, etc.
 	// Let's at least test that it transitioned out of Idle.
 	currentState := sm.GetState()
 	assert.NotEqual(t, StateIdle, currentState)
 
-	// Since we are not changing the original code, we will manually test the state transitions 
+	// Since we are not changing the original code, we will manually test the state transitions
 	// by simulating the tick logic.
 }
 

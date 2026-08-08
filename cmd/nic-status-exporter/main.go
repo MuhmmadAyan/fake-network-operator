@@ -51,7 +51,7 @@ func main() {
 	collector := metrics.NewNicMetricsCollector(topologyNamespace, nodeName)
 
 	http.Handle("/metrics", promhttp.Handler())
-	
+
 	go func() {
 		if err := http.ListenAndServe(":"+metricsPort, nil); err != nil && err != http.ErrServerClosed {
 			setupLog.Error(err, "failed to start HTTP server")
