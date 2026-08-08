@@ -60,7 +60,7 @@ components:
 
 secondaryNetworks:
   - name: hostdevice-net
-    type: host-device
+    type: macvlan
   - name: rdma-net
     type: macvlan
 
