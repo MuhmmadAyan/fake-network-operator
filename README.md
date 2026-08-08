@@ -107,13 +107,16 @@ nodes:
 EOF
 ```
 
-Install FNO (this automatically pulls `ghcr.io/muhmmadayan/fake-network-operator:0.1.0`):
+Install FNO via Helm (automatically pulls `ghcr.io/muhmmadayan/fake-network-operator:0.1.0`):
 ```bash
-# Install CRDs
-kubectl apply -f deploy/fake-network-operator/crds/
+# Add Fake Network Operator Helm repository
+helm repo add fake-network-operator https://muhmmadayan.github.io/fake-network-operator
+helm repo update
 
-# Install Helm chart
-make helm-install
+# Install FNO operator
+helm upgrade --install fake-network-operator fake-network-operator/fake-network-operator \
+  --namespace fake-network-operator \
+  --create-namespace
 ```
 
 ### 2. Label a worker node

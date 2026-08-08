@@ -36,16 +36,15 @@ kubectl apply -f deploy/fake-network-operator/crds/
 
 ## Step 3: Install FNO via Helm
 
-Deploy the Fake Network Operator using the provided Helm chart. The `ghcr.io/muhmmadayan/fake-network-operator:0.1.0` image will be pulled automatically.
+Add the official Helm repository and install Fake Network Operator:
 
 ```bash
-make helm-install
-```
+# Add Helm repository
+helm repo add fake-network-operator https://muhmmadayan.github.io/fake-network-operator
+helm repo update
 
-Alternatively, you can install it manually:
-
-```bash
-helm upgrade --install fake-network-operator deploy/fake-network-operator \
+# Install FNO operator
+helm upgrade --install fake-network-operator fake-network-operator/fake-network-operator \
   --namespace fake-network-operator \
   --create-namespace
 ```
