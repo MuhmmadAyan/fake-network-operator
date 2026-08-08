@@ -117,6 +117,9 @@ helm repo update
 helm upgrade --install fake-network-operator fake-network-operator/fake-network-operator \
   --namespace fake-network-operator \
   --create-namespace
+
+# Apply sample FakeNicClusterPolicy
+kubectl apply -f https://raw.githubusercontent.com/MuhmmadAyan/fake-network-operator/main/examples/sample-policy.yaml
 ```
 
 ### 2. Label a worker node
