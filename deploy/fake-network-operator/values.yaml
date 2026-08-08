@@ -1,7 +1,7 @@
 namespace: fake-network-operator
 
 image:
-  repository: ghcr.io/fake-network-operator/fake-network-operator
+  repository: ghcr.io/muhmmadayan/fake-network-operator
   tag: 0.1.0
   pullPolicy: IfNotPresent
 

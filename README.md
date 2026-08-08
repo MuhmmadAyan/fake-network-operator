@@ -94,8 +94,9 @@ Testing Kubernetes network scheduling for AI/ML workloads (NCCL, PyTorch Distrib
 - [Helm 3](https://helm.sh/docs/intro/install/) (v3.8.0+)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) (v1.26+)
 
-### 1. Create a KinD cluster
+### 1. Install Fake Network Operator via Helm
 
+Create a KinD cluster if you don't have one:
 ```bash
 cat <<EOF | kind create cluster --name fno-demo --config=-
 kind: Cluster
@@ -106,15 +107,7 @@ nodes:
 EOF
 ```
 
-### 2. Build & load the image
-
-```bash
-make docker-build
-kind load docker-image ghcr.io/fake-network-operator/fake-network-operator:0.1.0 --name fno-demo
-```
-
-### 3. Install FNO
-
+Install FNO (this automatically pulls `ghcr.io/muhmmadayan/fake-network-operator:0.1.0`):
 ```bash
 # Install CRDs
 kubectl apply -f deploy/fake-network-operator/crds/
@@ -123,13 +116,13 @@ kubectl apply -f deploy/fake-network-operator/crds/
 make helm-install
 ```
 
-### 4. Label a worker node
+### 2. Label a worker node
 
 ```bash
 kubectl label node fno-demo-worker fake-network-operator.io/nic-node-pool=default
 ```
 
-### 5. Verify
+### 3. Verify
 
 ```bash
 # All 8 pods should be Running
@@ -140,6 +133,14 @@ kubectl describe node fno-demo-worker | grep -A5 "Allocatable"
 # Expected:
 #   rdma/rdma_shared_device_a: 64
 #   nvidia.com/hostdev:        8
+```
+
+### Building from Source (Optional)
+
+If you want to build the Docker image locally instead of using the pre-built GHCR image:
+```bash
+make docker-build
+kind load docker-image ghcr.io/muhmmadayan/fake-network-operator:0.1.0 --name fno-demo
 ```
 
 > For more details, see the [Configuration](#configuration) section below.
@@ -235,6 +236,7 @@ FNO includes 14 modular binary components compiled into a single multi-binary Do
 
 - [ ] End-to-end integration tests (KinD-based)
 - [ ] GitHub Actions CI/CD pipeline
+- [x] Publish to GHCR
 - [ ] Helm chart publishing to ArtifactHub
 - [ ] Grafana dashboard templates for `nic-status-exporter` metrics
 - [ ] Fault injection API (simulate NIC failures, link flaps, PFC storms)

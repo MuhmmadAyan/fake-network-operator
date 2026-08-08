@@ -26,25 +26,7 @@ nodes:
 EOF
 ```
 
-## Step 2: Build the Docker Image
-
-Compile the operator binaries and package them into a multi-stage Docker image.
-
-```bash
-make docker-build
-```
-
-This builds an image containing all 14 operator binaries and tags it as `ghcr.io/fake-network-operator/fake-network-operator:0.1.0`.
-
-## Step 3: Load the Image into KinD
-
-Make the locally built Docker image available to the KinD cluster.
-
-```bash
-kind load docker-image ghcr.io/fake-network-operator/fake-network-operator:0.1.0 --name fno-demo
-```
-
-## Step 4: Install CRDs
+## Step 2: Install CRDs
 
 Install the Custom Resource Definitions (CRDs) required by the operator.
 
@@ -52,9 +34,9 @@ Install the Custom Resource Definitions (CRDs) required by the operator.
 kubectl apply -f deploy/fake-network-operator/crds/
 ```
 
-## Step 5: Install FNO via Helm
+## Step 3: Install FNO via Helm
 
-Deploy the Fake Network Operator using the provided Helm chart.
+Deploy the Fake Network Operator using the provided Helm chart. The `ghcr.io/muhmmadayan/fake-network-operator:0.1.0` image will be pulled automatically.
 
 ```bash
 make helm-install
@@ -68,7 +50,16 @@ helm upgrade --install fake-network-operator deploy/fake-network-operator \
   --create-namespace
 ```
 
-## Step 6: Apply the Sample Policy
+## Building from Source (Optional)
+
+If you need to build the image locally instead of pulling the pre-built GHCR image:
+
+```bash
+make docker-build
+kind load docker-image ghcr.io/muhmmadayan/fake-network-operator:0.1.0 --name fno-demo
+```
+
+## Step 4: Apply the Sample Policy
 
 Configure the operator by applying the sample network policy.
 
@@ -76,7 +67,7 @@ Configure the operator by applying the sample network policy.
 kubectl apply -f examples/sample-policy.yaml
 ```
 
-## Step 7: Label a Worker Node
+## Step 5: Label a Worker Node
 
 Label the worker node to trigger the operator's scheduling and resource allocation mechanisms.
 
@@ -84,7 +75,7 @@ Label the worker node to trigger the operator's scheduling and resource allocati
 kubectl label node fno-demo-worker fake-network-operator.io/nic-node-pool=default
 ```
 
-## Step 8: Verify Installation
+## Step 6: Verify Installation
 
 Ensure that the operator and its components are running correctly.
 
@@ -123,7 +114,7 @@ Replace `<status-exporter-pod>` with the actual name of your status exporter pod
 kubectl exec -n fake-network-operator <status-exporter-pod> -- curl -s localhost:9394/metrics | head -20
 ```
 
-## Step 9: Deploy a Test Workload
+## Step 7: Deploy a Test Workload
 
 Create a test pod that requests RDMA resources to verify the allocation works end-to-end.
 
