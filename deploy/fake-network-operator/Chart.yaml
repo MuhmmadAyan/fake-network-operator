@@ -2,8 +2,31 @@ apiVersion: v2
 name: fake-network-operator
 version: 0.1.0
 appVersion: 0.1.0
-description: A Helm chart for the Fake Network Operator
+description: Kubernetes operator simulating NVIDIA/Mellanox high-performance networking (InfiniBand, RDMA, SR-IOV, ConnectX NICs) without physical hardware.
+type: application
+home: https://github.com/MuhmmadAyan/fake-network-operator
+sources:
+  - https://github.com/MuhmmadAyan/fake-network-operator
 keywords:
   - networking
   - operator
+  - rdma
+  - sriov
+  - infiniband
+  - meallanox
+  - nvidia
+  - mlops
   - fake
+maintainers:
+  - name: Mohammad Ayan
+    email: muhmmadayanashiq@gmail.com
+    url: https://github.com/MuhmmadAyan
+annotations:
+  artifacthub.io/operator: "true"
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/links: |
+    - name: GitHub
+      url: https://github.com/MuhmmadAyan/fake-network-operator
+    - name: Quickstart
+      url: https://github.com/MuhmmadAyan/fake-network-operator/blob/main/docs/quickstart.md

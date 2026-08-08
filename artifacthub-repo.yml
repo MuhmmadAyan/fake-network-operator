@@ -1,0 +1,5 @@
+# Artifact Hub repository configuration file
+repositoryID: fake-network-operator
+owners:
+  - name: Mohammad Ayan
+    email: muhmmadayanashiq@gmail.com
