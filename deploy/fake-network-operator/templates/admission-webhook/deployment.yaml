@@ -1,0 +1,32 @@
+{{- if .Values.components.admissionWebhook.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fno.fullname" . }}-admission-webhook
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: admission-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: admission-webhook
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: admission-webhook
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      containers:
+        - name: admission-webhook
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/admission-webhook
+          ports:
+            - containerPort: 9443
+          resources:
+            {{- toYaml .Values.components.admissionWebhook.resources | nindent 12 }}
+{{- end }}

@@ -1,0 +1,30 @@
+{{- if .Values.components.ibKubernetes.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fno.fullname" . }}-ib-kubernetes
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: ib-kubernetes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: ib-kubernetes
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: ib-kubernetes
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      containers:
+        - name: ib-kubernetes
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/fake-ib-kubernetes
+          resources:
+            {{- toYaml .Values.components.ibKubernetes.resources | nindent 12 }}
+{{- end }}

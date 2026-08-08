@@ -1,0 +1,30 @@
+{{- if .Values.components.kwokNicDevicePlugin.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fno.fullname" . }}-kwok-nic-device-plugin
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: kwok-nic-device-plugin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: kwok-nic-device-plugin
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: kwok-nic-device-plugin
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      containers:
+        - name: kwok-nic-device-plugin
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/kwok-nic-device-plugin
+          resources:
+            {{- toYaml .Values.components.kwokNicDevicePlugin.resources | nindent 12 }}
+{{- end }}

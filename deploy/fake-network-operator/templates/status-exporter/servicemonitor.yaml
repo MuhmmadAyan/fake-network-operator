@@ -1,0 +1,17 @@
+{{- if and .Values.components.statusExporter.enabled (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "fno.fullname" . }}-status-exporter
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: status-exporter
+  endpoints:
+    - port: metrics
+      interval: 30s
+{{- end }}

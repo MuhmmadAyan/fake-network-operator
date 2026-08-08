@@ -1,0 +1,20 @@
+{{- if .Values.components.statusExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fno.fullname" . }}-status-exporter
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: status-exporter
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9394
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "fno.selectorLabels" . | nindent 4 }}
+    app: status-exporter
+{{- end }}

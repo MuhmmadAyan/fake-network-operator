@@ -1,0 +1,32 @@
+{{- if .Values.components.controllerManager.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fno.fullname" . }}-controller-manager
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: controller-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: controller-manager
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: controller-manager
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      containers:
+        - name: controller-manager
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/controller-manager
+          args:
+            - "--leader-elect"
+          resources:
+            {{- toYaml .Values.components.controllerManager.resources | nindent 12 }}
+{{- end }}

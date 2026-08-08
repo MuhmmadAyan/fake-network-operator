@@ -1,0 +1,9 @@
+Thank you for installing {{ .Chart.Name }}.
+
+To verify that the installation was successful, check the pods in the {{ .Values.namespace }} namespace:
+  kubectl get pods -n {{ .Values.namespace }}
+
+To enable Fake NIC capabilities on your nodes, label them with the configured node pool label:
+  kubectl label node <node-name> {{ .Values.nodePoolLabelKey }}=default
+
+This will trigger the deployment of node-specific components like the nic-labeler, device plugins, and status exporter.

@@ -1,0 +1,41 @@
+apiVersion: fake-network-operator.io/v1alpha1
+kind: FakeNicClusterPolicy
+metadata:
+  name: nic-cluster-policy
+spec:
+  nodePoolSelector: fake-network-operator.io/nic-node-pool
+  nicNodePools:
+    default:
+      gpuDirectCapable: true
+      rdma:
+        resourceName: "rdma_shared_device_a"
+        sharedCount: 64
+      sriov:
+        totalVfs: 8
+        resourceName: "hostdev"
+        resourcePrefix: "nvidia.com"
+        driver: "mlx5_core"
+  components:
+    nicLabeler:
+      deploy: true
+    rdmaDevicePlugin:
+      deploy: true
+    sriovDevicePlugin:
+      deploy: true
+    sriovConfigDaemon:
+      deploy: true
+    statusExporter:
+      deploy: true
+    cliInjector:
+      deploy: true
+  secondaryNetworks:
+    - name: "hostdevice-net"
+      type: "macvlan"
+      master: "eth0"
+      ipamRange: "192.168.2.0/24"
+      namespace: "default"
+    - name: "rdma-net"
+      type: "macvlan"
+      master: "eth0"
+      ipamRange: "192.168.3.0/24"
+      namespace: "default"

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rdma-test-pod
+  namespace: default
+  annotations:
+    k8s.v1.cni.cncf.io/networks: fake-network-operator/rdma-net
+spec:
+  containers:
+  - name: test-container
+    image: busybox:latest
+    command: ["/bin/sh", "-c", "ibstat && sleep 3600"]
+    resources:
+      limits:
+        rdma/rdma_shared_device_a: "1"
+      requests:
+        rdma/rdma_shared_device_a: "1"
+    volumeMounts:
+    - name: fake-cli
+      mountPath: /usr/local/bin/ibstat
+      subPath: ibstat
+    - name: topology
+      mountPath: /etc/fake-network-operator
+  volumes:
+  - name: fake-cli
+    hostPath:
+      path: /opt/fake-network-operator/bin
+  - name: topology
+    configMap:
+      name: nic-topology-fno-demo-worker

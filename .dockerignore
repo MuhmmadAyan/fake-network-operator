@@ -1,0 +1,6 @@
+.git
+*.md
+!README.md
+deploy/
+hack/
+test/

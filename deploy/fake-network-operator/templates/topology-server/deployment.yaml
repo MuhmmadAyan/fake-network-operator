@@ -1,0 +1,33 @@
+{{- if .Values.components.topologyServer.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fno.fullname" . }}-topology-server
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: topology-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: topology-server
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: topology-server
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      containers:
+        - name: topology-server
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/topology-server
+          args:
+            - "--namespace"
+            - {{ .Values.namespace | quote }}
+          resources:
+            {{- toYaml .Values.components.topologyServer.resources | nindent 12 }}
+{{- end }}

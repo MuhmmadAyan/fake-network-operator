@@ -1,0 +1,55 @@
+{{- if .Values.components.sriovDevicePlugin.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "fno.fullname" . }}-sriov-device-plugin
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: sriov-device-plugin
+spec:
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: sriov-device-plugin
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: sriov-device-plugin
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: {{ .Values.nodePoolLabelKey }}
+                    operator: Exists
+      containers:
+        - name: sriov-device-plugin
+          securityContext:
+            runAsUser: 0
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/fake-sriov-device-plugin
+          args:
+            - "--topology-namespace"
+            - {{ .Values.namespace | quote }}
+            - "--node-name"
+            - "$(NODE_NAME)"
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: device-plugins
+              mountPath: /var/lib/kubelet/device-plugins
+          resources:
+            {{- toYaml .Values.components.sriovDevicePlugin.resources | nindent 12 }}
+      volumes:
+        - name: device-plugins
+          hostPath:
+            path: /var/lib/kubelet/device-plugins
+{{- end }}

@@ -1,0 +1,78 @@
+namespace: fake-network-operator
+
+image:
+  repository: ghcr.io/fake-network-operator/fake-network-operator
+  tag: 0.1.0
+  pullPolicy: IfNotPresent
+
+nodePoolLabelKey: fake-network-operator.io/nic-node-pool
+
+topology:
+  nicNodePools:
+    default:
+      gpuDirectCapable: true
+      rdma:
+        resourceName: "rdma_shared_device_a"
+        sharedCount: 64
+      sriov:
+        totalVfs: 8  # Configure number of SR-IOV Virtual Functions (VFs)
+        resourceName: "hostdev"
+        resourcePrefix: "nvidia.com"
+        driver: "mlx5_core"
+
+components:
+  controllerManager:
+    enabled: true
+    resources: {}
+  topologyServer:
+    enabled: true
+    resources: {}
+  nicLabeler:
+    enabled: true
+    resources: {}
+  rdmaDevicePlugin:
+    enabled: true
+    resources: {}
+  sriovDevicePlugin:
+    enabled: true
+    resources: {}
+  sriovConfigDaemon:
+    enabled: true
+    resources: {}
+  statusExporter:
+    enabled: true
+    resources: {}
+  cliInjector:
+    enabled: true
+    resources: {}
+  ibKubernetes:
+    enabled: false
+    resources: {}
+  ufmStub:
+    enabled: false
+    resources: {}
+  kwokNicDevicePlugin:
+    enabled: false
+    resources: {}
+  admissionWebhook:
+    enabled: false
+    resources: {}
+
+secondaryNetworks:
+  - name: hostdevice-net
+    type: host-device
+  - name: rdma-net
+    type: macvlan
+
+multus:
+  deploy: false
+
+whereabouts:
+  deploy: false
+
+serviceAccount:
+  create: true
+  name: ""
+
+rbac:
+  create: true

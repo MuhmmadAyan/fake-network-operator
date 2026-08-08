@@ -1,0 +1,49 @@
+{{- if .Values.components.statusExporter.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "fno.fullname" . }}-status-exporter
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: status-exporter
+spec:
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: status-exporter
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: status-exporter
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: {{ .Values.nodePoolLabelKey }}
+                    operator: Exists
+      containers:
+        - name: status-exporter
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/fake-nic-status-exporter
+          args:
+            - "--topology-namespace"
+            - {{ .Values.namespace | quote }}
+            - "--node-name"
+            - "$(NODE_NAME)"
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - name: metrics
+              containerPort: 9394
+          resources:
+            {{- toYaml .Values.components.statusExporter.resources | nindent 12 }}
+{{- end }}

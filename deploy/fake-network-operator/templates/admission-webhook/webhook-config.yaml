@@ -1,0 +1,22 @@
+{{- if .Values.components.admissionWebhook.enabled }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "fno.fullname" . }}-admission-webhook
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+webhooks:
+  - name: validate.fake-network-operator.io
+    clientConfig:
+      service:
+        name: {{ include "fno.fullname" . }}-admission-webhook
+        namespace: {{ .Values.namespace }}
+        path: "/validate"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["fake-network-operator.io"]
+        apiVersions: ["v1alpha1"]
+        resources: ["fakenicclusterpolicies"]
+    sideEffects: None
+    admissionReviewVersions: ["v1"]
+{{- end }}

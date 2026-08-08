@@ -1,0 +1,25 @@
+apiVersion: fake-network-operator.io/v1alpha1
+kind: FakeNicClusterPolicy
+metadata:
+  name: nic-cluster-policy
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+spec:
+  nodePoolSelector: {{ .Values.nodePoolLabelKey | quote }}
+  nicNodePools:
+    {{- toYaml .Values.topology.nicNodePools | nindent 4 }}
+  components:
+    nicLabeler:
+      deploy: {{ .Values.components.nicLabeler.enabled }}
+    rdmaDevicePlugin:
+      deploy: {{ .Values.components.rdmaDevicePlugin.enabled }}
+    sriovDevicePlugin:
+      deploy: {{ .Values.components.sriovDevicePlugin.enabled }}
+    sriovConfigDaemon:
+      deploy: {{ .Values.components.sriovConfigDaemon.enabled }}
+    statusExporter:
+      deploy: {{ .Values.components.statusExporter.enabled }}
+    cliInjector:
+      deploy: {{ .Values.components.cliInjector.enabled }}
+  secondaryNetworks:
+    {{- toYaml .Values.secondaryNetworks | nindent 4 }}

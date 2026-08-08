@@ -1,0 +1,20 @@
+{{- if .Values.components.ufmStub.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fno.fullname" . }}-ufm-stub
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: ufm-stub
+spec:
+  type: ClusterIP
+  ports:
+    - port: 443
+      targetPort: 443
+      protocol: TCP
+      name: https
+  selector:
+    {{- include "fno.selectorLabels" . | nindent 4 }}
+    app: ufm-stub
+{{- end }}

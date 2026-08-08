@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pytorch-dist-worker-0
+  namespace: default
+  labels:
+    app: pytorch-dist
+    role: master
+  annotations:
+    k8s.v1.cni.cncf.io/networks: fake-network-operator/rdma-net
+spec:
+  containers:
+  - name: pytorch
+    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    command: ["python", "-c", "import torch; print('PyTorch initialized with simulated RDMA!')"]
+    securityContext:
+      capabilities:
+        add: ["IPC_LOCK"]
+    resources:
+      limits:
+        rdma/rdma_shared_device_a: "1"
+        nvidia.com/hostdev: "1"
+      requests:
+        rdma/rdma_shared_device_a: "1"
+        nvidia.com/hostdev: "1"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pytorch-dist-worker-1
+  namespace: default
+  labels:
+    app: pytorch-dist
+    role: worker
+  annotations:
+    k8s.v1.cni.cncf.io/networks: fake-network-operator/rdma-net
+spec:
+  containers:
+  - name: pytorch
+    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    command: ["python", "-c", "import torch; print('PyTorch initialized with simulated RDMA!')"]
+    securityContext:
+      capabilities:
+        add: ["IPC_LOCK"]
+    resources:
+      limits:
+        rdma/rdma_shared_device_a: "1"
+        nvidia.com/hostdev: "1"
+      requests:
+        rdma/rdma_shared_device_a: "1"
+        nvidia.com/hostdev: "1"

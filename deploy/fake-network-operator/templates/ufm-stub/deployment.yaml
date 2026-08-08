@@ -1,0 +1,32 @@
+{{- if .Values.components.ufmStub.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fno.fullname" . }}-ufm-stub
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: ufm-stub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: ufm-stub
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: ufm-stub
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      containers:
+        - name: ufm-stub
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/fake-ufm-stub
+          ports:
+            - containerPort: 443
+          resources:
+            {{- toYaml .Values.components.ufmStub.resources | nindent 12 }}
+{{- end }}

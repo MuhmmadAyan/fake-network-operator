@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sriov-test-pod
+  namespace: default
+  annotations:
+    k8s.v1.cni.cncf.io/networks: fake-network-operator/hostdevice-net
+spec:
+  containers:
+  - name: test-container
+    image: busybox:latest
+    command: ["/bin/sh", "-c", "echo SR-IOV VF attached; sleep 3600"]
+    resources:
+      limits:
+        nvidia.com/hostdev: "1"
+      requests:
+        nvidia.com/hostdev: "1"

@@ -1,0 +1,46 @@
+{{- if .Values.components.nicLabeler.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "fno.fullname" . }}-nic-labeler
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "fno.labels" . | nindent 4 }}
+    app: nic-labeler
+spec:
+  selector:
+    matchLabels:
+      {{- include "fno.selectorLabels" . | nindent 6 }}
+      app: nic-labeler
+  template:
+    metadata:
+      labels:
+        {{- include "fno.selectorLabels" . | nindent 8 }}
+        app: nic-labeler
+    spec:
+      serviceAccountName: {{ include "fno.serviceAccountName" . }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: {{ .Values.nodePoolLabelKey }}
+                    operator: Exists
+      containers:
+        - name: nic-labeler
+          image: {{ include "fno.image" . }}
+          command:
+            - /usr/local/bin/fake-nic-labeler
+          args:
+            - "--topology-namespace"
+            - {{ .Values.namespace | quote }}
+            - "--node-name"
+            - "$(NODE_NAME)"
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          resources:
+            {{- toYaml .Values.components.nicLabeler.resources | nindent 12 }}
+{{- end }}

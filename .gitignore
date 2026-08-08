@@ -1,0 +1,43 @@
+# Go binaries and build artifacts
+*.exe
+*.exe?
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/bin/
+/dist/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Helm package artifacts
+*.tgz
+charts/
+
+# Vendor directory
+vendor/
+
+# Coverage files
+cover.out
+*.coverprofile
+
+# Temporary files
+/tmp/
+scratch/
+
+# Environment files
+.env
+.env.local
+
+# Personal notes (not for public repo)
+notes/
