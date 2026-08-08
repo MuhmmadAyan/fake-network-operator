@@ -1,9 +1,35 @@
-Thank you for installing {{ .Chart.Name }}.
+==============================================================================
+  🌐 Fake Network Operator (FNO) v{{ .Chart.AppVersion }} Successfully Deployed!
+==============================================================================
 
-To verify that the installation was successful, check the pods in the {{ .Values.namespace }} namespace:
-  kubectl get pods -n {{ .Values.namespace }}
+  Thank you for installing Fake Network Operator!
+  Simulating InfiniBand, RDMA, SR-IOV & ConnectX NICs on Kubernetes.
 
-To enable Fake NIC capabilities on your nodes, label them with the configured node pool label:
-  kubectl label node <node-name> {{ .Values.nodePoolLabelKey }}=default
+  Author & Maintainer: Mohammad Ayan
+  GitHub:     https://github.com/MuhmmadAyan/fake-network-operator
+  Artifacts:  https://muhmmadayan.github.io/fake-network-operator
+  LinkedIn:   https://www.linkedin.com/in/muhmmadayan
 
-This will trigger the deployment of node-specific components like the nic-labeler, device plugins, and status exporter.
+------------------------------------------------------------------------------
+⚡ QUICK START STEPS:
+------------------------------------------------------------------------------
+
+1. Verify operator pods are running:
+     kubectl get pods -n {{ .Values.namespace }}
+
+2. Apply the sample FakeNicClusterPolicy (if not already applied):
+     kubectl apply -f https://raw.githubusercontent.com/MuhmmadAyan/fake-network-operator/main/examples/sample-policy.yaml
+
+3. Activate Fake NIC simulation on a node by labeling it:
+     kubectl label node <node-name> {{ .Values.nodePoolLabelKey }}=default
+
+4. Verify advertised extended resources on your node:
+     kubectl describe node <node-name> | grep -A5 "Allocatable"
+     # Expected:
+     #   rdma/rdma_shared_device_a: 64
+     #   nvidia.com/hostdev:        8
+
+------------------------------------------------------------------------------
+⭐ Enjoying Fake Network Operator? Star the project on GitHub!
+  https://github.com/MuhmmadAyan/fake-network-operator
+==============================================================================
